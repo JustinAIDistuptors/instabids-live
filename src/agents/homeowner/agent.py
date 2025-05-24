@@ -85,20 +85,22 @@ async def submit_scope_fact(
     If they say 'My budget is $10000', call this with fact_name='budget', fact_value='10000'.
     """
     print(f"[Tool: submit_scope_fact] Attempting to record: {fact_name} = {fact_value}", flush=True)
+    # Explicitly use the global supabase_client defined in this agent.py file.
+    active_supabase_client = supabase_client 
 
-    if not supabase_client:
-        msg = "Supabase client not initialized. Cannot record fact to database."
+    if not active_supabase_client:
+        msg = "CRITICAL_ERROR: Supabase client (global) not initialized in submit_scope_fact. Cannot record fact to database. Check server logs for Supabase client initialization errors at the top of agent.py."
         print(f"[Tool: submit_scope_fact] {msg}", flush=True)
-        # Fallback to old behavior if Supabase is not available
+        # Update local facts for debugging, but current_project_scope_id will not be set from DB.
         if tool_context:
             if 'collected_facts' not in tool_context.state:
                 tool_context.state['collected_facts'] = {}
             tool_context.state['collected_facts'][fact_name] = fact_value
-            return f"Fact '{fact_name}' recorded locally as '{fact_value}'. DB not available."
-        return f"Fact '{fact_name}' recorded (local fallback, no context). DB not available."
+            print(f"[Tool: submit_scope_fact] Local collected_facts updated. current_project_scope_id remains: {tool_context.state.get('current_project_scope_id')}", flush=True)
+        return msg # Return critical error
 
     current_project_scope_id = tool_context.state.get('current_project_scope_id')
-    db_operation_successful = False
+    print(f"[Tool: submit_scope_fact] Initial current_project_scope_id from state: {current_project_scope_id}", flush=True)
     message = ""
 
     try:
@@ -106,49 +108,48 @@ async def submit_scope_fact(
         if current_project_scope_id:
             print(f"[Tool: submit_scope_fact] Updating existing project scope ID: {current_project_scope_id}", flush=True)
             response = await asyncio.to_thread(
-                supabase_client.table('project_scopes')
+                active_supabase_client.table('project_scopes')
                 .update(data_to_save)
                 .eq('id', current_project_scope_id)
                 .execute
             )
             if response.data:
-                db_operation_successful = True
                 message = f"Project scope updated. Fact '{fact_name}' recorded as '{fact_value}' for Project ID: {current_project_scope_id}."
                 print(f"[Tool: submit_scope_fact] Update successful: {response.data}", flush=True)
             else:
                 error_info = response.error if response.error else "Unknown error during update."
-                message = f"Error updating project scope {current_project_scope_id}. Details: {error_info}"
+                message = f"DB_ERROR: Error updating project scope {current_project_scope_id}. Details: {error_info}"
                 print(f"[Tool: submit_scope_fact] Update failed: {error_info}", flush=True)
-        else:
-            print(f"[Tool: submit_scope_fact] Creating new project scope.", flush=True)
-            # Add a placeholder for homeowner_id if you have a user system, otherwise omit or set to null if column allows
-            # data_to_save['homeowner_id'] = tool_context.state.get('homeowner_user_id') # Example
+        else: # Creating a new project scope
+            print(f"[Tool: submit_scope_fact] Creating new project scope with data: {data_to_save}", flush=True)
             response = await asyncio.to_thread(
-                supabase_client.table('project_scopes')
+                active_supabase_client.table('project_scopes')
                 .insert(data_to_save)
                 .execute
             )
-            if response.data and len(response.data) > 0:
+            print(f"[Tool: submit_scope_fact] DB insert response: {response}", flush=True)
+            if response.data and len(response.data) > 0 and response.data[0].get('id'):
                 new_scope_id = response.data[0]['id']
                 tool_context.state['current_project_scope_id'] = new_scope_id
-                db_operation_successful = True
                 message = f"New project scope started. Fact '{fact_name}' recorded as '{fact_value}'. Project ID: {new_scope_id}."
-                print(f"[Tool: submit_scope_fact] Insert successful: {response.data}", flush=True)
-            else:
-                error_info = response.error if response.error else "Unknown error during insert."
-                message = f"Error creating new project scope. Details: {error_info}"
-                print(f"[Tool: submit_scope_fact] Insert failed: {error_info}", flush=True)
+                print(f"[Tool: submit_scope_fact] Insert successful, new scope ID set in state: {new_scope_id}", flush=True)
+            else: # Failed to create new scope or get ID
+                error_info = response.error if response.error else f"Insert operation did not return data or ID. Response data: {response.data}"
+                message = f"CRITICAL_ERROR: Failed to create new project scope or retrieve its ID. Details: {error_info}"
+                print(f"[Tool: submit_scope_fact] Insert failed or no ID returned: {message}", flush=True)
+                # current_project_scope_id remains None or its previous value
 
     except Exception as e:
-        message = f"An unexpected error occurred while saving fact '{fact_name}': {e}"
+        message = f"CRITICAL_ERROR: An unexpected error occurred in submit_scope_fact while saving '{fact_name}': {str(e)}"
         print(f"[Tool: submit_scope_fact] Exception: {message}", flush=True)
 
-    # Fallback state update for local tracking, regardless of DB success for now
+    # Update local collected_facts for debugging or if DB is transiently down.
     if tool_context:
         if 'collected_facts' not in tool_context.state:
             tool_context.state['collected_facts'] = {}
         tool_context.state['collected_facts'][fact_name] = fact_value
-        print(f"[Tool: submit_scope_fact] Local state in tool_context: {tool_context.state['collected_facts']}", flush=True)
+        print(f"[Tool: submit_scope_fact] Local collected_facts updated: {tool_context.state.get('collected_facts')}", flush=True)
+        print(f"[Tool: submit_scope_fact] Final current_project_scope_id in state: {tool_context.state.get('current_project_scope_id')}", flush=True)
     
     return message
 
@@ -222,52 +223,101 @@ class HomeownerAgent(LlmAgent):
         print(f"[{__file__}] HomeownerAgent.async_process_event called. Last event type: {last_event.type if last_event else 'None'}", flush=True)
 
         current_tool_context = tool_context or self.tool_context
+        event_for_llm = last_event  # Default to original event
+        system_notes_for_llm = [] # Accumulate notes for the LLM
 
         if last_event and last_event.type == "USER_MESSAGE" and last_event.content:
-            image_url_to_report = None
-            for part in last_event.content.parts:
+            image_part_data = None
+            for part_idx, part in enumerate(last_event.content.parts):
                 if part.inline_data and part.inline_data.mime_type.startswith("image/"):
-                    print(f"[{__file__}] Image detected in USER_MESSAGE: {part.inline_data.mime_type}", flush=True)
-                    image_bytes = part.inline_data.data
-                    mime_type = part.inline_data.mime_type
-                    file_extension = mime_type.split('/')[-1]
-
-                    # Encode bytes to base64 string
-                    image_base64_string = base64.b64encode(image_bytes).decode('utf-8')
-
-                    if 'upload_image_to_supabase' in self.tools_map:
-                        try:
-                            print(f"[{__file__}] Calling upload_image_to_supabase function...", flush=True)
-                            image_url_from_upload = await self.tools_map['upload_image_to_supabase'].func(
-                                tool_context=current_tool_context, 
-                                image_base64=image_base64_string,  
-                                file_extension=file_extension
-                            )
-                            print(f"[{__file__}] Image upload result (URL or error): {image_url_from_upload}", flush=True)
-                            if image_url_from_upload and not image_url_from_upload.startswith("Error:"):
-                                image_url_to_report = image_url_from_upload
-                            if image_url_from_upload and image_url_from_upload.startswith("Error:"):
-                                yield Event(type="ASSISTANT_MESSAGE", content=Content(parts=[Part(text=f"I encountered an issue uploading your image: {image_url_from_upload}")]))
-                                return 
-
-                        except Exception as e:
-                            print(f"[{__file__}] Error calling upload_image_to_supabase: {e}", flush=True)
-                            yield Event(type="ASSISTANT_MESSAGE", content=Content(parts=[Part(text=f"I encountered an unexpected error trying to upload your image: {e}. Please try again or continue without it for now.")]))
-                            return 
-                    else:
-                        print(f"[{__file__}] 'upload_image_to_supabase' tool not found in tools_map.", flush=True)
-                    break 
+                    image_part_data = part
+                    break
             
-            if image_url_to_report and not image_url_to_report.startswith("Error:"):
-                yield Event(type="ASSISTANT_MESSAGE", content=Content(parts=[Part(text=f"I've uploaded the image. You can find it at: {image_url_to_report}. I will now save this information.")]))
-                self.uploaded_image_urls.append(image_url_to_report)
+            if image_part_data:
+                print(f"[{__file__}] Image detected in USER_MESSAGE: {image_part_data.inline_data.mime_type}", flush=True)
+                image_bytes = image_part_data.inline_data.data
+                mime_type = image_part_data.inline_data.mime_type
+                file_extension = mime_type.split('/')[-1]
+                image_base64_string = base64.b64encode(image_bytes).decode('utf-8')
 
-        async for response_event in super().chat(last_event=last_event, tool_context=current_tool_context):
-            print(f"[{__file__}] Yielding event from super().chat(): {response_event.type}, content: {response_event.content.parts[0].text if response_event.content and response_event.content.parts else 'N/A'}", flush=True)
+                image_url_from_upload = None
+                try:
+                    if 'upload_image_to_supabase' in self.tools_map:
+                        print(f"[{__file__}] Calling upload_image_to_supabase function...", flush=True)
+                        # Ensure the tool uses the global supabase_client by its definition in tools.py or agent.py
+                        image_url_from_upload = await self.tools_map['upload_image_to_supabase'].func(
+                            tool_context=current_tool_context, 
+                            image_base64=image_base64_string,  
+                            file_extension=file_extension
+                        )
+                        print(f"[{__file__}] Image upload result (URL or error): {image_url_from_upload}", flush=True)
+
+                        if image_url_from_upload:
+                            if image_url_from_upload.startswith("Error:"):
+                                system_notes_for_llm.append(f"System note: Image upload failed. Detail: {image_url_from_upload}")
+                                print(f"[{__file__}] Image upload tool returned an error: {image_url_from_upload}", flush=True)
+                            else:
+                                system_notes_for_llm.append(f"System note: An image was successfully uploaded with URL: {image_url_from_upload}.")
+                                project_scope_id = current_tool_context.state.get('current_project_scope_id')
+                                # Use the global supabase_client for consistency with other tools
+                                active_supabase_client = supabase_client 
+                                if project_scope_id and active_supabase_client:
+                                    print(f"[{__file__}] Saving image URL to project_images. Scope ID: {project_scope_id}, URL: {image_url_from_upload}", flush=True)
+                                    image_data_to_save = {
+                                        'project_scope_id': project_scope_id,
+                                        'image_url': image_url_from_upload
+                                    }
+                                    insert_response = await asyncio.to_thread(
+                                        active_supabase_client.table('project_images').insert(image_data_to_save).execute
+                                    )
+                                    if not insert_response.data or (hasattr(insert_response, 'error') and insert_response.error):
+                                        error_info = insert_response.error if hasattr(insert_response, 'error') and insert_response.error else "Unknown error during project_images insert."
+                                        system_notes_for_llm.append(f"System note: Image was uploaded, but failed to catalog it in project_images table. Detail: {error_info}")
+                                        print(f"[{__file__}] Error saving image URL to project_images: {error_info}", flush=True)
+                                    else:
+                                        system_notes_for_llm.append(f"System note: Image URL successfully cataloged in project_images table.")
+                                        print(f"[{__file__}] Image URL successfully saved to project_images table for scope {project_scope_id}.", flush=True)
+                                elif not project_scope_id:
+                                    system_notes_for_llm.append(f"System note: Image was uploaded, but cannot catalog to project_images: current_project_scope_id is not set.")
+                                    print(f"[{__file__}] Cannot save image to project_images: current_project_scope_id is not set.", flush=True)
+                                elif not active_supabase_client:
+                                    system_notes_for_llm.append(f"System note: Image was uploaded, but cannot catalog to project_images: Supabase client not initialized.")
+                                    print(f"[{__file__}] Cannot save image to project_images: Supabase client (global) not initialized.", flush=True)
+                        else: # image_url_from_upload is None
+                            system_notes_for_llm.append(f"System note: Image upload attempt did not return a URL or an error message.")
+                            print(f"[{__file__}] Image upload tool returned None.", flush=True)
+
+                    else: # Tool not in map
+                        system_notes_for_llm.append(f"System note: Image detected, but 'upload_image_to_supabase' tool is not available.")
+                        print(f"[{__file__}] 'upload_image_to_supabase' tool not found in tools_map.", flush=True)
+
+                except Exception as e:
+                    system_notes_for_llm.append(f"System note: An unexpected error occurred during image processing: {str(e)}")
+                    print(f"[{__file__}] Exception during image processing: {e}", flush=True)
+
+                # Create a modified event for the LLM, excluding the image data, but including system notes
+                text_parts = [p for p_idx, p in enumerate(last_event.content.parts) if not (p.inline_data and p.inline_data.mime_type.startswith("image/"))]
+                if system_notes_for_llm:
+                    full_system_note = " ".join(system_notes_for_llm)
+                    text_parts.append(Part(text=f"({full_system_note})"))
+                
+                modified_content = Content(parts=text_parts, role=last_event.content.role)
+                event_for_llm = Event(type=last_event.type, content=modified_content)
+                print(f"[{__file__}] Image processed. Modified event created for LLM.", flush=True)
+            else:
+                print(f"[{__file__}] No image detected in USER_MESSAGE parts.", flush=True)
+
+        # Fallback to default LlmAgent.chat behavior if no specific handling was done or to continue processing
+        print(f"[{__file__}] Yielding to super().chat with event_for_llm (type: {event_for_llm.type if event_for_llm else 'None'}). Current tool_context state: {current_tool_context.state if current_tool_context else 'None'}", flush=True)
+        async for response_event in super().chat(
+            context=context, 
+            last_event=event_for_llm, 
+            tool_context=current_tool_context
+        ):
+            print(f"[{__file__}] Event from super().chat: {response_event.type if response_event else 'None'}", flush=True)
             yield response_event
-        print(f"[{__file__}] Finished super().chat() for event type: {last_event.type if last_event else 'None'}", flush=True)
 
-    def get_current_project_scope_id(self) -> str | None:
+    def get_current_project_scope_id(self) -> Optional[str]:
         """Helper to get current_project_scope_id from tool_context."""
         return self.tool_context.state.get('current_project_scope_id')
 
