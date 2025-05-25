@@ -134,6 +134,7 @@ async def submit_scope_fact(
 ) -> str:
     """
     Saves a specific piece of information (a fact) about the homeowner's project to the database.
+    If 'current_homeowner_id' is not in tool_context.state, it will be generated and stored.
     If project_scope_id is not provided, it will use 'current_project_scope_id' from the agent's state.
     If 'current_project_scope_id' is not in state and project_scope_id is not provided, a new project_scope will be initiated.
 
@@ -148,44 +149,42 @@ async def submit_scope_fact(
         print(f"[Tool: submit_scope_fact] {msg}", flush=True)
         return f"Error: {msg}"
 
+    generated_new_homeowner_id_message_suffix = ""
+    current_homeowner_id = tool_context.state.get('current_homeowner_id')
+    if not current_homeowner_id:
+        current_homeowner_id = str(uuid.uuid4()) # Generate new homeowner_id
+        tool_context.state['current_homeowner_id'] = current_homeowner_id
+        print(f"[Tool: submit_scope_fact] No Homeowner ID in state. Generated new Homeowner ID: {current_homeowner_id}", flush=True)
+        generated_new_homeowner_id_message_suffix = f" A new Homeowner ID was generated for you: {current_homeowner_id}. Please save this for future reference."
+    else:
+        print(f"[Tool: submit_scope_fact] Using existing Homeowner ID from state: {current_homeowner_id}", flush=True)
+
     current_project_scope_id = project_scope_id or tool_context.state.get('current_project_scope_id')
+    generated_new_project_id_message_suffix = ""
 
     try:
         if not current_project_scope_id:
-            # Create a new project_scope entry and get its ID
-            print(f"[Tool: submit_scope_fact] No current_project_scope_id. Creating new project scope with {fact_name}: {fact_value}", flush=True)
-            new_scope_data = {fact_name: fact_value}
-            # Add user_id if available in context/state, assuming 'user_id' is a field in project_scopes
-            user_id = tool_context.state.get('user_id') # Or however user_id is managed
-            if user_id:
-                new_scope_data['user_id'] = user_id
+            new_project_scope_uuid = str(uuid.uuid4()) # Generate UUID for the project's own ID column
+            print(f"[Tool: submit_scope_fact] No current_project_scope_id. Creating new project scope (ID: {new_project_scope_uuid}) for homeowner_id {current_homeowner_id} with {fact_name}: {fact_value}", flush=True)
+            new_scope_data = {
+                'id': new_project_scope_uuid, # Explicitly set the project's own ID
+                fact_name: fact_value,
+                'homeowner_id': current_homeowner_id
+            }
             
             response = supabase_client.table("project_scopes").insert(new_scope_data).execute()
-            if response.data and len(response.data) > 0:
-                current_project_scope_id = response.data[0]['id']
-                tool_context.state['current_project_scope_id'] = current_project_scope_id # Update state
-                print(f"[Tool: submit_scope_fact] New project_scope created with ID: {current_project_scope_id}", flush=True)
-                return f"Successfully created new project and saved {fact_name}. Project ID is {current_project_scope_id}."
-            else:
-                error_msg = f"Failed to create new project_scope. Response: {response}"
-                print(f"[Tool: submit_scope_fact] {error_msg}", flush=True)
-                return f"Error: {error_msg}"
+            # After insert, the ID we set is the one to use.
+            current_project_scope_id = new_project_scope_uuid
+            tool_context.state['current_project_scope_id'] = current_project_scope_id # Update state
+            print(f"[Tool: submit_scope_fact] New project_scope created with ID: {current_project_scope_id} for homeowner_id: {current_homeowner_id}", flush=True)
+            generated_new_project_id_message_suffix = f" Project ID is {current_project_scope_id}."
+            return f"Successfully created new project and saved {fact_name}.{generated_new_project_id_message_suffix}{generated_new_homeowner_id_message_suffix}"
         else:
-            # Update existing project_scope
-            print(f"[Tool: submit_scope_fact] Updating project_scope ID: {current_project_scope_id} with {fact_name}: {fact_value}", flush=True)
-            response = supabase_client.table("project_scopes").update({fact_name: fact_value}).eq("id", current_project_scope_id).execute()
-            if not response.data or len(response.data) == 0: # Check if update was successful (some APIs return empty data on success)
-                # Depending on Supabase client version, successful updates might return empty data or the updated record.
-                # Assuming for now that lack of error means success or data contains the update.
-                print(f"[Tool: submit_scope_fact] Successfully updated {fact_name} for project_scope ID: {current_project_scope_id}. Response: {response}", flush=True)
-                return f"Successfully updated {fact_name} for project ID {current_project_scope_id}."
-            # This part might need adjustment based on actual Supabase client response for updates.
-            # If response.data is expected to contain the updated record, check its contents.
-            # If an error occurred, response might have an error attribute or non-2xx status.
-            # For now, we assume if it didn't throw and data is present or empty (common for updates), it's okay.
-            # A more robust check would inspect response.error or response.status_code if available.
-            print(f"[Tool: submit_scope_fact] Successfully updated {fact_name} for project_scope ID: {current_project_scope_id}. Response: {response}", flush=True)
-            return f"Successfully updated {fact_name} for project ID {current_project_scope_id}."
+            print(f"[Tool: submit_scope_fact] Updating project_scope ID: {current_project_scope_id} (homeowner_id: {current_homeowner_id}) with {fact_name}: {fact_value}", flush=True)
+            update_data = {fact_name: fact_value}
+            response = supabase_client.table("project_scopes").update(update_data).eq("id", current_project_scope_id).execute()
+            print(f"[Tool: submit_scope_fact] Update operation completed for project_scope ID: {current_project_scope_id}. Response status: {getattr(response, 'status_code', 'N/A')}, data: {getattr(response, 'data', 'N/A')}", flush=True)
+            return f"Successfully updated {fact_name} for project ID {current_project_scope_id}.{generated_new_homeowner_id_message_suffix}"
 
     except Exception as e:
         error_message = f"An unexpected error occurred in submit_scope_fact: {e}"
