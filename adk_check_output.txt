@@ -1,0 +1,17 @@
+--- Logging redirected to C:\Users\Not John Or Justin\Documents\GitHub\instabids-live\adk_check_output.txt ---
+--- sys.path ---
+C:\Users\Not John Or Justin\Documents\GitHub\instabids-live
+C:\Users\Not John Or Justin\AppData\Local\Programs\Python\Python312\python312.zip
+C:\Users\Not John Or Justin\AppData\Local\Programs\Python\Python312\DLLs
+C:\Users\Not John Or Justin\AppData\Local\Programs\Python\Python312\Lib
+C:\Users\Not John Or Justin\AppData\Local\Programs\Python\Python312
+C:\Users\Not John Or Justin\AppData\Local\pypoetry\Cache\virtualenvs\agent-starter-pack-psWu8-Lj-py3.12
+C:\Users\Not John Or Justin\AppData\Local\pypoetry\Cache\virtualenvs\agent-starter-pack-psWu8-Lj-py3.12\Lib\site-packages
+C:\Users\Not John Or Justin\AppData\Local\pypoetry\Cache\virtualenvs\agent-starter-pack-psWu8-Lj-py3.12\Lib\site-packages\win32
+C:\Users\Not John Or Justin\AppData\Local\pypoetry\Cache\virtualenvs\agent-starter-pack-psWu8-Lj-py3.12\Lib\site-packages\win32\lib
+C:\Users\Not John Or Justin\AppData\Local\pypoetry\Cache\virtualenvs\agent-starter-pack-psWu8-Lj-py3.12\Lib\site-packages\Pythonwin
+----------------
+--- Attempting to import google.adk ---
+SUCCESS: google.adk imported successfully.
+google.adk version: 1.1.1
+--- Logging to C:\Users\Not John Or Justin\Documents\GitHub\instabids-live\adk_check_output.txt complete. ---

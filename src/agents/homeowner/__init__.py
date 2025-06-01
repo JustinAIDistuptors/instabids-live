@@ -62,10 +62,10 @@ homeowner_agent_instance = HomeownerAgent(
 )
 print(f"[{__file__}] HomeownerAgent instantiated: {homeowner_agent_instance.name}", flush=True)
 
-# The ADK server will discover this 'root_agent'.
-root_agent = homeowner_agent_instance
+# The ADK server will discover this 'root_agent' if uncommented and __all__ is updated.
+_root_agent_original = homeowner_agent_instance # Renamed to deactivate
 
 # Print a confirmation that the module was loaded and root_agent is set.
-print(f"[{__file__}] 'root_agent' (HomeownerAgent instance) assigned and module loaded.", flush=True)
+print(f"[{__file__}] '_root_agent_original' (HomeownerAgent instance) assigned. This agent is currently deactivated from ADK discovery.", flush=True)
 
-__all__ = ["root_agent"]
+# __all__ = ["root_agent"] # Commented out to deactivate

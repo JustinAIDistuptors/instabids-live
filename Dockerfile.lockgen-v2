@@ -1,0 +1,17 @@
+# Dockerfile.lockgen-v2
+FROM python:3.11-slim
+
+# Install specific Poetry version matching Dockerfile.dev
+RUN pip install --no-cache-dir "poetry==1.8.3"
+
+WORKDIR /app
+
+# Copy only pyproject.toml to ensure lock is generated against its current state
+COPY pyproject.toml ./
+
+# Generate the lock file.
+# --no-update ensures it only resolves based on pyproject.toml, not fetching newer compatible versions.
+RUN poetry lock --no-update
+
+# Output the generated lock file
+CMD ["cat", "poetry.lock"]

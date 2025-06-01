@@ -1,0 +1,58 @@
+# Git files
+.git
+.gitignore
+
+# Docker files
+Dockerfile
+.dockerignore
+
+# Python virtual environments
+.venv
+venv
+ENV
+
+# Poetry cache and local config
+.poetry
+poetry.lock # Usually committed, but can be ignored if generated fresh in Dockerfile
+
+# Python bytecode and cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# IDE and editor specific files
+.vscode/
+.idea/
+*.project
+*.swp
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
+
+# Test artifacts and coverage reports
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Logs and temporary files
+*.log
+*.tmp
+
+# Secrets and environment files (should be passed as environment variables to the container)
+#.env
+#*.env
+secrets/
+
+# Node.js dependencies (if any frontend part uses it and it's not part of the Python build)
+node_modules/
+
+# Local data or large files not needed in the image
+local_data/
+*.sqlite3
+*.db

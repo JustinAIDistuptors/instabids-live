@@ -1,0 +1,17 @@
+# Dockerfile.lockgen
+FROM python:3.11-slim
+
+# System deps
+RUN apt-get update && apt-get install -y build-essential curl && rm -rf /var/lib/apt/lists/*
+
+# Poetry
+ENV POETRY_VERSION=1.8.3
+RUN pip install --no-cache-dir "poetry==$POETRY_VERSION"
+
+WORKDIR /app
+COPY pyproject.toml poetry.lock ./
+
+# Generate the lock file and then print its content
+# We expect poetry.lock might be initially incompatible, so we delete it first
+# then run `poetry lock` to generate a fresh one based on pyproject.toml and Python 3.11
+CMD rm -f poetry.lock && poetry lock --no-update && cat poetry.lock

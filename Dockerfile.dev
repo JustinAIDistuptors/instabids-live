@@ -1,0 +1,30 @@
+# Dockerfile.dev
+FROM python:3.11-slim
+
+# 1. System deps – grpc native code needs them
+RUN apt-get update && apt-get install -y build-essential curl && rm -rf /var/lib/apt/lists/*
+
+# 2. Poetry
+ENV POETRY_VERSION=1.8.3
+RUN pip install --no-cache-dir "poetry==$POETRY_VERSION"
+
+WORKDIR /app
+COPY pyproject.toml poetry.lock ./
+# Copy *only* source, not your Windows .venv or other host artifacts
+COPY src/ ./src/
+COPY .env ./.env
+
+# Install only main dependencies for a cleaner runtime environment
+# This will also install the current project (agent-starter-pack)
+RUN poetry install --only main --no-interaction --no-ansi
+
+# Expose the port ADK will run on (as specified in the CMD)
+EXPOSE 8000
+
+# Set environment variables for better debugging from the start
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONFAULTHANDLER=1
+ENV GRPC_VERBOSITY=DEBUG
+
+# Command to run the ADK web server
+CMD ["poetry", "run", "adk", "web", "src/agents", "--host", "0.0.0.0", "--port", "8000", "--log_level", "debug"]

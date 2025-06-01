@@ -1,0 +1,11 @@
+{
+  "components": [
+    {
+      "id": "homeowner",
+      "entrypoint": "src.agents.homeowner_live.agent:root_agent",
+      "model": "models/gemini-2.5-flash-preview-native-audio-dialog",
+      "streaming": true,
+      "description": "Voice/chat assistant that scopes renovation projects."
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+import pathlib, site, shutil, sys
+for p in map(pathlib.Path, site.getsitepackages()):
+    g = p / "google"
+    if g.exists() and not (g/"__init__.py").exists():
+        print("Removing stale", g, file=sys.stderr)
+        shutil.rmtree(g)
+print("Namespace cleanup script finished.", file=sys.stderr)
