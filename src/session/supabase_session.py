@@ -1,5 +1,6 @@
 # src/session/supabase_session.py
-from google.adk.services.session_service import SessionService, SessionState
+print(f"[{__file__}] Attempting to load src.session.supabase_session", flush=True)
+from google.adk.sessions import BaseSessionService, State
 from supabase import create_client, Client as SupabaseClient
 import os
 import json
@@ -8,7 +9,7 @@ from typing import Dict, Any, Optional
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_SERVICE_ROLE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
 
-class SupabaseSessionService(SessionService):
+class SupabaseSessionService(BaseSessionService):
     def __init__(self):
         if not SUPABASE_URL or not SUPABASE_SERVICE_ROLE_KEY:
             print(f"[{__name__}] ERROR: Supabase URL or Service Role Key not configured for SessionService.")
@@ -19,7 +20,7 @@ class SupabaseSessionService(SessionService):
             self.supabase_client = create_client(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
         print(f"[{__name__}] SupabaseSessionService initialized. Client: {'OK' if self.supabase_client else 'Not Configured'}")
 
-    async def async_get_session_state(self, session_id: str) -> Optional[SessionState]:
+    async def async_get_session_state(self, session_id: str) -> Optional[State]:
         if not self.supabase_client:
             print(f"[{__name__}] Supabase client not initialized in SessionService. Cannot get state for session: {session_id}")
             # According to SessionService ABC, should probably raise an error or return None if unrecoverable.
@@ -45,7 +46,7 @@ class SupabaseSessionService(SessionService):
                     return None
 
                 print(f"[{__name__}] Session state found and parsed for {session_id}")
-                return SessionState(session_id=session_id, items=state_dict)
+                return State(session_id=session_id, items=state_dict)
             elif response.error:
                 print(f"[{__name__}] Supabase error getting session state for {session_id}: {response.error.message}")
                 return None
@@ -56,7 +57,7 @@ class SupabaseSessionService(SessionService):
             print(f"[{__name__}] Exception getting session state for {session_id}: {e}")
             return None
 
-    async def async_set_session_state(self, session_id: str, state: SessionState) -> None:
+    async def async_set_session_state(self, session_id: str, state: State) -> None:
         if not self.supabase_client:
             print(f"[{__name__}] Supabase client not initialized in SessionService. Cannot set state for session: {session_id}")
             # Consider raising an error as this is a critical failure.
@@ -97,6 +98,27 @@ class SupabaseSessionService(SessionService):
                 print(f"[{__name__}] Session state for {session_id} deleted (if existed).")
         except Exception as e:
             print(f"[{__name__}] Exception deleting session state for {session_id}: {e}")
+
+    # Required synchronous methods by BaseSessionService
+    def create_session(self, user_id: str, session = None) -> State: # type: ignore
+        # TODO: Implement synchronous session creation or bridge to async
+        print(f"[{__name__}] Synchronous create_session called but not implemented.")
+        raise NotImplementedError("Synchronous create_session is not implemented.")
+
+    def get_session(self, session_id: str) -> Optional[State]:
+        # TODO: Implement synchronous session retrieval or bridge to async
+        print(f"[{__name__}] Synchronous get_session called but not implemented.")
+        raise NotImplementedError("Synchronous get_session is not implemented.")
+
+    def list_sessions(self, user_id: str) -> list[State]: # type: ignore
+        # TODO: Implement synchronous session listing or bridge to async
+        print(f"[{__name__}] Synchronous list_sessions called but not implemented.")
+        raise NotImplementedError("Synchronous list_sessions is not implemented.")
+
+    def delete_session(self, session_id: str) -> None:
+        # TODO: Implement synchronous session deletion or bridge to async
+        print(f"[{__name__}] Synchronous delete_session called but not implemented.")
+        raise NotImplementedError("Synchronous delete_session is not implemented.")
 
 # Note: The 'adk_sessions' table needs to exist in Supabase with at least:
 # - session_id (text, primary key)

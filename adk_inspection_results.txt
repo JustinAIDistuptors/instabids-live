@@ -1,0 +1,255 @@
+Python version: 3.11.9 (tags/v3.11.9:de54cf5, Apr  2 2024, 10:12:12) [MSC v.1938 64 bit (AMD64)]
+Python path: ['C:\\Users\\Not John Or Justin\\Documents\\GitHub\\instabids-live', 'C:\\Users\\Not John Or Justin\\AppData\\Local\\Programs\\Python\\Python311\\python311.zip', 'C:\\Users\\Not John Or Justin\\AppData\\Local\\Programs\\Python\\Python311\\DLLs', 'C:\\Users\\Not John Or Justin\\AppData\\Local\\Programs\\Python\\Python311\\Lib', 'C:\\Users\\Not John Or Justin\\AppData\\Local\\Programs\\Python\\Python311', 'C:\\Users\\Not John Or Justin\\Documents\\GitHub\\instabids-live\\.venv', 'C:\\Users\\Not John Or Justin\\Documents\\GitHub\\instabids-live\\.venv\\Lib\\site-packages', 'C:\\Users\\Not John Or Justin\\Documents\\GitHub\\instabids-live\\.venv\\Lib\\site-packages\\win32', 'C:\\Users\\Not John Or Justin\\Documents\\GitHub\\instabids-live\\.venv\\Lib\\site-packages\\win32\\lib', 'C:\\Users\\Not John Or Justin\\Documents\\GitHub\\instabids-live\\.venv\\Lib\\site-packages\\Pythonwin']
+Current working directory: C:\Users\Not John Or Justin\Documents\GitHub\instabids-live
+
+Inspecting google.adk.agents...
+
+--- Checking module: google.adk.agents ---
+Successfully imported google.adk.agents
+Contents of google.adk.agents (path: C:\Users\Not John Or Justin\Documents\GitHub\instabids-live\.venv\Lib\site-packages\google\adk\agents\__init__.py):
+  - Agent (Class, from module: google.adk.agents.llm_agent)
+  - BaseAgent (Class, from module: google.adk.agents.base_agent)
+  - LiveRequest (Class, from module: google.adk.agents.live_request_queue)
+  - LiveRequestQueue (Class, from module: google.adk.agents.live_request_queue)
+  - LlmAgent (Class, from module: google.adk.agents.llm_agent)
+  - LoopAgent (Class, from module: google.adk.agents.loop_agent)
+  - ParallelAgent (Class, from module: google.adk.agents.parallel_agent)
+  - RunConfig (Class, from module: google.adk.agents.run_config)
+  - SequentialAgent (Class, from module: google.adk.agents.sequential_agent)
+  - __all__ (Type: <class 'list'>)
+  - active_streaming_tool (Submodule, path: C:\Users\Not John Or Justin\Documents\GitHub\instabids-live\.venv\Lib\site-packages\google\adk\agents\active_streaming_tool.py)
+  - base_agent (Submodule, path: C:\Users\Not John Or Justin\Documents\GitHub\instabids-live\.venv\Lib\site-packages\google\adk\agents\base_agent.py)
+  - callback_context (Submodule, path: C:\Users\Not John Or Justin\Documents\GitHub\instabids-live\.venv\Lib\site-packages\google\adk\agents\callback_context.py)
+  - invocation_context (Submodule, path: C:\Users\Not John Or Justin\Documents\GitHub\instabids-live\.venv\Lib\site-packages\google\adk\agents\invocation_context.py)
+  - live_request_queue (Submodule, path: C:\Users\Not John Or Justin\Documents\GitHub\instabids-live\.venv\Lib\site-packages\google\adk\agents\live_request_queue.py)
+  - llm_agent (Submodule, path: C:\Users\Not John Or Justin\Documents\GitHub\instabids-live\.venv\Lib\site-packages\google\adk\agents\llm_agent.py)
+  - loop_agent (Submodule, path: C:\Users\Not John Or Justin\Documents\GitHub\instabids-live\.venv\Lib\site-packages\google\adk\agents\loop_agent.py)
+  - parallel_agent (Submodule, path: C:\Users\Not John Or Justin\Documents\GitHub\instabids-live\.venv\Lib\site-packages\google\adk\agents\parallel_agent.py)
+  - readonly_context (Submodule, path: C:\Users\Not John Or Justin\Documents\GitHub\instabids-live\.venv\Lib\site-packages\google\adk\agents\readonly_context.py)
+  - run_config (Submodule, path: C:\Users\Not John Or Justin\Documents\GitHub\instabids-live\.venv\Lib\site-packages\google\adk\agents\run_config.py)
+  - sequential_agent (Submodule, path: C:\Users\Not John Or Justin\Documents\GitHub\instabids-live\.venv\Lib\site-packages\google\adk\agents\sequential_agent.py)
+  - transcription_entry (Submodule, path: C:\Users\Not John Or Justin\Documents\GitHub\instabids-live\.venv\Lib\site-packages\google\adk\agents\transcription_entry.py)
+
+Inspecting potential submodules...
+
+--- Checking module: google.adk.agents.active_streaming_tool ---
+Successfully imported google.adk.agents.active_streaming_tool
+Contents of google.adk.agents.active_streaming_tool (path: C:\Users\Not John Or Justin\Documents\GitHub\instabids-live\.venv\Lib\site-packages\google\adk\agents\active_streaming_tool.py):
+  - ActiveStreamingTool (Class, from module: google.adk.agents.active_streaming_tool)
+  - BaseModel (Class, from module: pydantic.main)
+  - ConfigDict (Class, from module: pydantic.config)
+  - LiveRequestQueue (Class, from module: google.adk.agents.live_request_queue)
+  - Optional (Type: <class 'typing._SpecialForm'>)
+  - annotations (Type: <class '__future__._Feature'>)
+  - asyncio (Submodule, path: C:\Users\Not John Or Justin\AppData\Local\Programs\Python\Python311\Lib\asyncio\__init__.py)
+
+--- Checking module: google.adk.agents.base_agent ---
+Successfully imported google.adk.agents.base_agent
+Contents of google.adk.agents.base_agent (path: C:\Users\Not John Or Justin\Documents\GitHub\instabids-live\.venv\Lib\site-packages\google\adk\agents\base_agent.py):
+  - AfterAgentCallback (Type: <class 'typing._UnionGenericAlias'>)
+  - Any (Class, from module: typing)
+  - AsyncGenerator (Type: <class 'typing._SpecialGenericAlias'>)
+  - Awaitable (Type: <class 'typing._SpecialGenericAlias'>)
+  - BaseAgent (Class, from module: google.adk.agents.base_agent)
+  - BaseModel (Class, from module: pydantic.main)
+  - BeforeAgentCallback (Type: <class 'typing._UnionGenericAlias'>)
+  - Callable (Type: <class 'typing._CallableType'>)
+  - CallbackContext (Class, from module: google.adk.agents.callback_context)
+  - ConfigDict (Class, from module: pydantic.config)
+  - Event (Class, from module: google.adk.events.event)
+  - Field (Type: <class 'function'>)
+  - Optional (Type: <class 'typing._SpecialForm'>)
+  - TYPE_CHECKING (Type: <class 'bool'>)
+  - TypeAlias (Type: <class 'typing._SpecialForm'>)
+  - Union (Type: <class 'typing._SpecialForm'>)
+  - annotations (Type: <class '__future__._Feature'>)
+  - field_validator (Type: <class 'function'>)
+  - final (Type: <class 'function'>)
+  - inspect (Submodule, path: C:\Users\Not John Or Justin\AppData\Local\Programs\Python\Python311\Lib\inspect.py)
+  - override (Type: <class 'function'>)
+  - trace (Submodule, path: C:\Users\Not John Or Justin\Documents\GitHub\instabids-live\.venv\Lib\site-packages\opentelemetry\trace\__init__.py)
+  - tracer (Type: <class 'opentelemetry.trace.ProxyTracer'>)
+  - types (Submodule, path: C:\Users\Not John Or Justin\Documents\GitHub\instabids-live\.venv\Lib\site-packages\google\genai\types.py)
+
+--- Checking module: google.adk.agents.callback_context ---
+Successfully imported google.adk.agents.callback_context
+Contents of google.adk.agents.callback_context (path: C:\Users\Not John Or Justin\Documents\GitHub\instabids-live\.venv\Lib\site-packages\google\adk\agents\callback_context.py):
+  - CallbackContext (Class, from module: google.adk.agents.callback_context)
+  - Optional (Type: <class 'typing._SpecialForm'>)
+  - ReadonlyContext (Class, from module: google.adk.agents.readonly_context)
+  - TYPE_CHECKING (Type: <class 'bool'>)
+  - annotations (Type: <class '__future__._Feature'>)
+  - override (Type: <class 'function'>)
+
+--- Checking module: google.adk.agents.core_agents ---
+Failed to import google.adk.agents.core_agents: No module named 'google.adk.agents.core_agents'
+
+--- Checking module: google.adk.agents.experimental ---
+Failed to import google.adk.agents.experimental: No module named 'google.adk.agents.experimental'
+
+--- Checking module: google.adk.agents.invocation_context ---
+Successfully imported google.adk.agents.invocation_context
+Contents of google.adk.agents.invocation_context (path: C:\Users\Not John Or Justin\Documents\GitHub\instabids-live\.venv\Lib\site-packages\google\adk\agents\invocation_context.py):
+  - ActiveStreamingTool (Class, from module: google.adk.agents.active_streaming_tool)
+  - BaseAgent (Class, from module: google.adk.agents.base_agent)
+  - BaseArtifactService (Class, from module: google.adk.artifacts.base_artifact_service)
+  - BaseMemoryService (Class, from module: google.adk.memory.base_memory_service)
+  - BaseModel (Class, from module: pydantic.main)
+  - BaseSessionService (Class, from module: google.adk.sessions.base_session_service)
+  - ConfigDict (Class, from module: pydantic.config)
+  - InvocationContext (Class, from module: google.adk.agents.invocation_context)
+  - LiveRequestQueue (Class, from module: google.adk.agents.live_request_queue)
+  - LlmCallsLimitExceededError (Class, from module: google.adk.agents.invocation_context)
+  - Optional (Type: <class 'typing._SpecialForm'>)
+  - RunConfig (Class, from module: google.adk.agents.run_config)
+  - Session (Class, from module: google.adk.sessions.session)
+  - TranscriptionEntry (Class, from module: google.adk.agents.transcription_entry)
+  - annotations (Type: <class '__future__._Feature'>)
+  - new_invocation_context_id (Type: <class 'function'>)
+  - types (Submodule, path: C:\Users\Not John Or Justin\Documents\GitHub\instabids-live\.venv\Lib\site-packages\google\genai\types.py)
+  - uuid (Submodule, path: C:\Users\Not John Or Justin\AppData\Local\Programs\Python\Python311\Lib\uuid.py)
+
+--- Checking module: google.adk.agents.live ---
+Failed to import google.adk.agents.live: No module named 'google.adk.agents.live'
+
+--- Checking module: google.adk.agents.live_request_queue ---
+Successfully imported google.adk.agents.live_request_queue
+Contents of google.adk.agents.live_request_queue (path: C:\Users\Not John Or Justin\Documents\GitHub\instabids-live\.venv\Lib\site-packages\google\adk\agents\live_request_queue.py):
+  - BaseModel (Class, from module: pydantic.main)
+  - ConfigDict (Class, from module: pydantic.config)
+  - LiveRequest (Class, from module: google.adk.agents.live_request_queue)
+  - LiveRequestQueue (Class, from module: google.adk.agents.live_request_queue)
+  - Optional (Type: <class 'typing._SpecialForm'>)
+  - asyncio (Submodule, path: C:\Users\Not John Or Justin\AppData\Local\Programs\Python\Python311\Lib\asyncio\__init__.py)
+  - types (Submodule, path: C:\Users\Not John Or Justin\Documents\GitHub\instabids-live\.venv\Lib\site-packages\google\genai\types.py)
+
+--- Checking module: google.adk.agents.llm_agent ---
+Successfully imported google.adk.agents.llm_agent
+Contents of google.adk.agents.llm_agent (path: C:\Users\Not John Or Justin\Documents\GitHub\instabids-live\.venv\Lib\site-packages\google\adk\agents\llm_agent.py):
+  - AfterModelCallback (Type: <class 'typing._UnionGenericAlias'>)
+  - AfterToolCallback (Type: <class 'typing._UnionGenericAlias'>)
+  - Agent (Class, from module: google.adk.agents.llm_agent)
+  - Any (Class, from module: typing)
+  - AsyncGenerator (Type: <class 'typing._SpecialGenericAlias'>)
+  - AutoFlow (Class, from module: google.adk.flows.llm_flows.auto_flow)
+  - Awaitable (Type: <class 'typing._SpecialGenericAlias'>)
+  - BaseAgent (Class, from module: google.adk.agents.base_agent)
+  - BaseCodeExecutor (Class, from module: google.adk.code_executors.base_code_executor)
+  - BaseExampleProvider (Class, from module: google.adk.examples.base_example_provider)
+  - BaseLlm (Class, from module: google.adk.models.base_llm)
+  - BaseLlmFlow (Class, from module: google.adk.flows.llm_flows.base_llm_flow)
+  - BaseModel (Class, from module: pydantic.main)
+  - BasePlanner (Class, from module: google.adk.planners.base_planner)
+  - BaseTool (Class, from module: google.adk.tools.base_tool)
+  - BaseToolset (Class, from module: google.adk.tools.base_toolset)
+  - BeforeModelCallback (Type: <class 'typing._UnionGenericAlias'>)
+  - BeforeToolCallback (Type: <class 'typing._UnionGenericAlias'>)
+  - Callable (Type: <class 'typing._CallableType'>)
+  - CallbackContext (Class, from module: google.adk.agents.callback_context)
+  - Event (Class, from module: google.adk.events.event)
+  - Example (Class, from module: google.adk.examples.example)
+  - ExamplesUnion (Type: <class 'typing._UnionGenericAlias'>)
+  - Field (Type: <class 'function'>)
+  - FunctionTool (Class, from module: google.adk.tools.function_tool)
+  - InstructionProvider (Type: <class 'typing._CallableGenericAlias'>)
+  - InvocationContext (Class, from module: google.adk.agents.invocation_context)
+  - LLMRegistry (Class, from module: google.adk.models.registry)
+  - Literal (Type: <class 'typing._LiteralSpecialForm'>)
+  - LlmAgent (Class, from module: google.adk.agents.llm_agent)
+  - LlmRequest (Class, from module: google.adk.models.llm_request)
+  - LlmResponse (Class, from module: google.adk.models.llm_response)
+  - Optional (Type: <class 'typing._SpecialForm'>)
+  - ReadonlyContext (Class, from module: google.adk.agents.readonly_context)
+  - SingleFlow (Class, from module: google.adk.flows.llm_flows.single_flow)
+  - ToolContext (Class, from module: google.adk.tools.tool_context)
+  - ToolUnion (Type: <class 'typing._UnionGenericAlias'>)
+  - TypeAlias (Type: <class 'typing._SpecialForm'>)
+  - Union (Type: <class 'typing._SpecialForm'>)
+  - annotations (Type: <class '__future__._Feature'>)
+  - field_validator (Type: <class 'function'>)
+  - inspect (Submodule, path: C:\Users\Not John Or Justin\AppData\Local\Programs\Python\Python311\Lib\inspect.py)
+  - logger (Type: <class 'logging.Logger'>)
+  - logging (Submodule, path: C:\Users\Not John Or Justin\AppData\Local\Programs\Python\Python311\Lib\logging\__init__.py)
+  - model_validator (Type: <class 'function'>)
+  - override (Type: <class 'function'>)
+  - types (Submodule, path: C:\Users\Not John Or Justin\Documents\GitHub\instabids-live\.venv\Lib\site-packages\google\genai\types.py)
+
+--- Checking module: google.adk.agents.loop_agent ---
+Successfully imported google.adk.agents.loop_agent
+Contents of google.adk.agents.loop_agent (path: C:\Users\Not John Or Justin\Documents\GitHub\instabids-live\.venv\Lib\site-packages\google\adk\agents\loop_agent.py):
+  - AsyncGenerator (Type: <class 'typing._SpecialGenericAlias'>)
+  - BaseAgent (Class, from module: google.adk.agents.base_agent)
+  - Event (Class, from module: google.adk.events.event)
+  - InvocationContext (Class, from module: google.adk.agents.invocation_context)
+  - LoopAgent (Class, from module: google.adk.agents.loop_agent)
+  - Optional (Type: <class 'typing._SpecialForm'>)
+  - annotations (Type: <class '__future__._Feature'>)
+  - override (Type: <class 'function'>)
+
+--- Checking module: google.adk.agents.parallel_agent ---
+Successfully imported google.adk.agents.parallel_agent
+Contents of google.adk.agents.parallel_agent (path: C:\Users\Not John Or Justin\Documents\GitHub\instabids-live\.venv\Lib\site-packages\google\adk\agents\parallel_agent.py):
+  - AsyncGenerator (Type: <class 'typing._SpecialGenericAlias'>)
+  - BaseAgent (Class, from module: google.adk.agents.base_agent)
+  - Event (Class, from module: google.adk.events.event)
+  - InvocationContext (Class, from module: google.adk.agents.invocation_context)
+  - ParallelAgent (Class, from module: google.adk.agents.parallel_agent)
+  - annotations (Type: <class '__future__._Feature'>)
+  - asyncio (Submodule, path: C:\Users\Not John Or Justin\AppData\Local\Programs\Python\Python311\Lib\asyncio\__init__.py)
+  - override (Type: <class 'function'>)
+
+--- Checking module: google.adk.agents.readonly_context ---
+Successfully imported google.adk.agents.readonly_context
+Contents of google.adk.agents.readonly_context (path: C:\Users\Not John Or Justin\Documents\GitHub\instabids-live\.venv\Lib\site-packages\google\adk\agents\readonly_context.py):
+  - Any (Class, from module: typing)
+  - MappingProxyType (Class, from module: builtins)
+  - Optional (Type: <class 'typing._SpecialForm'>)
+  - ReadonlyContext (Class, from module: google.adk.agents.readonly_context)
+  - TYPE_CHECKING (Type: <class 'bool'>)
+  - annotations (Type: <class '__future__._Feature'>)
+
+--- Checking module: google.adk.agents.run_config ---
+Successfully imported google.adk.agents.run_config
+Contents of google.adk.agents.run_config (path: C:\Users\Not John Or Justin\Documents\GitHub\instabids-live\.venv\Lib\site-packages\google\adk\agents\run_config.py):
+  - BaseModel (Class, from module: pydantic.main)
+  - ConfigDict (Class, from module: pydantic.config)
+  - Enum (Class, from module: enum)
+  - Optional (Type: <class 'typing._SpecialForm'>)
+  - RunConfig (Class, from module: google.adk.agents.run_config)
+  - StreamingMode (Class, from module: google.adk.agents.run_config)
+  - field_validator (Type: <class 'function'>)
+  - logger (Type: <class 'logging.Logger'>)
+  - logging (Submodule, path: C:\Users\Not John Or Justin\AppData\Local\Programs\Python\Python311\Lib\logging\__init__.py)
+  - sys (Submodule, path: N/A)
+  - types (Submodule, path: C:\Users\Not John Or Justin\Documents\GitHub\instabids-live\.venv\Lib\site-packages\google\genai\types.py)
+
+--- Checking module: google.adk.agents.sequential_agent ---
+Successfully imported google.adk.agents.sequential_agent
+Contents of google.adk.agents.sequential_agent (path: C:\Users\Not John Or Justin\Documents\GitHub\instabids-live\.venv\Lib\site-packages\google\adk\agents\sequential_agent.py):
+  - AsyncGenerator (Type: <class 'typing._SpecialGenericAlias'>)
+  - BaseAgent (Class, from module: google.adk.agents.base_agent)
+  - Event (Class, from module: google.adk.events.event)
+  - InvocationContext (Class, from module: google.adk.agents.invocation_context)
+  - LlmAgent (Class, from module: google.adk.agents.llm_agent)
+  - SequentialAgent (Class, from module: google.adk.agents.sequential_agent)
+  - annotations (Type: <class '__future__._Feature'>)
+  - override (Type: <class 'function'>)
+
+--- Checking module: google.adk.agents.transcription_entry ---
+Successfully imported google.adk.agents.transcription_entry
+Contents of google.adk.agents.transcription_entry (path: C:\Users\Not John Or Justin\Documents\GitHub\instabids-live\.venv\Lib\site-packages\google\adk\agents\transcription_entry.py):
+  - BaseModel (Class, from module: pydantic.main)
+  - ConfigDict (Class, from module: pydantic.config)
+  - Optional (Type: <class 'typing._SpecialForm'>)
+  - TranscriptionEntry (Class, from module: google.adk.agents.transcription_entry)
+  - Union (Type: <class 'typing._SpecialForm'>)
+  - types (Submodule, path: C:\Users\Not John Or Justin\Documents\GitHub\instabids-live\.venv\Lib\site-packages\google\genai\types.py)
+
+--- Direct import attempts for LiveAgent ---
+Failed direct import/getattr: from google.adk.agents import LiveAgent (module 'google.adk.agents' has no attribute 'LiveAgent')
+Failed direct import/getattr: from google.adk.agents.live import LiveAgent (No module named 'google.adk.agents.live')
+Failed direct import/getattr: from google.adk.agents.core import LiveAgent (No module named 'google.adk.agents.core')
+Failed direct import/getattr: from google.adk.live import LiveAgent (No module named 'google.adk.live')
+Failed direct import/getattr: from google.adk.experimental import LiveAgent (No module named 'google.adk.experimental')
+
+Inspection complete.

@@ -6,6 +6,11 @@
       "model": "models/gemini-2.5-flash-preview-native-audio-dialog",
       "streaming": true,
       "description": "Voice/chat assistant that scopes renovation projects."
+    },
+    {
+      "id": "supabase_session_service",
+      "entrypoint": "src.session.supabase_session:SupabaseSessionService",
+      "type": "SessionService"
     }
   ]
 }

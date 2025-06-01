@@ -27,4 +27,4 @@ ENV PYTHONFAULTHANDLER=1
 ENV GRPC_VERBOSITY=DEBUG
 
 # Command to run the ADK web server
-CMD ["poetry", "run", "adk", "web", "src/agents", "--host", "0.0.0.0", "--port", "8000", "--log_level", "debug"]
+CMD ["poetry", "run", "adk", "web", "/app/src/agents", "--host", "0.0.0.0", "--port", "8000", "--log_level", "DEBUG"]

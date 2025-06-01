@@ -1,4 +1,5 @@
 # src/tools/supabase_tools.py
+print(f"[{__file__}] Attempting to load src.tools.supabase_tools", flush=True)
 from google.adk.tools import FunctionTool, ToolContext
 from supabase import create_client, Client as SupabaseClient
 import os
@@ -121,7 +122,5 @@ async def upsert_project_scope_implementation(tool_context: ToolContext, **slots
 
 
 upsert_project_scope_tool = FunctionTool(
-    fn=upsert_project_scope_implementation,
-    name="upsert_project_scope_tool",
-    description="Saves or updates project scope details (like budget, timeline) to Supabase. Manages homeowner_id and project_scope_id.",
+    upsert_project_scope_implementation
 )

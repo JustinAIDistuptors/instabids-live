@@ -1,0 +1,35 @@
+Python version: 3.11.9 (tags/v3.11.9:de54cf5, Apr  2 2024, 10:12:12) [MSC v.1938 64 bit (AMD64)]
+Python executable: C:\Users\Not John Or Justin\Documents\GitHub\instabids-live\.venv\Scripts\python.exe
+sys.path:
+  [0] C:\Users\Not John Or Justin\Documents\GitHub\instabids-live
+  [1] C:\Users\Not John Or Justin\AppData\Local\Programs\Python\Python311\python311.zip
+  [2] C:\Users\Not John Or Justin\AppData\Local\Programs\Python\Python311\DLLs
+  [3] C:\Users\Not John Or Justin\AppData\Local\Programs\Python\Python311\Lib
+  [4] C:\Users\Not John Or Justin\AppData\Local\Programs\Python\Python311
+  [5] C:\Users\Not John Or Justin\Documents\GitHub\instabids-live\.venv
+  [6] C:\Users\Not John Or Justin\Documents\GitHub\instabids-live\.venv\Lib\site-packages
+  [7] C:\Users\Not John Or Justin\Documents\GitHub\instabids-live\.venv\Lib\site-packages\win32
+  [8] C:\Users\Not John Or Justin\Documents\GitHub\instabids-live\.venv\Lib\site-packages\win32\lib
+  [9] C:\Users\Not John Or Justin\Documents\GitHub\instabids-live\.venv\Lib\site-packages\Pythonwin
+--------------------------------------------------
+Attempting to import 'google'...
+Successfully imported 'google'.
+google.__file__ -> None
+google.__path__:
+  [0] C:\Users\Not John Or Justin\Documents\GitHub\instabids-live\.venv\Lib\site-packages\google
+--------------------------------------------------
+Attempting to import 'google.adk'...
+Successfully imported 'google.adk'.
+google.adk.__file__ -> 'C:\\Users\\Not John Or Justin\\Documents\\GitHub\\instabids-live\\.venv\\Lib\\site-packages\\google\\adk\\__init__.py'
+google.adk.__version__ -> '1.1.1'
+google.adk.__path__:
+  [0] C:\Users\Not John Or Justin\Documents\GitHub\instabids-live\.venv\Lib\site-packages\google\adk
+\nIterating modules in google.adk.__path__:
+  Modules found: ['agents', 'artifacts', 'auth', 'cli', 'code_executors', 'evaluation', 'events', 'examples', 'flows', 'memory', 'models', 'planners', 'runners', 'sessions', 'telemetry', 'tools', 'utils', 'version'] 
+--------------------------------------------------
+Attempting to import 'google.adk.context'...
+\n❌ IMPORT ERROR: cannot import name 'context' from 'google.adk' (C:\Users\Not John Or Justin\Documents\GitHub\instabids-live\.venv\Lib\site-packages\google\adk\__init__.py)
+   Failed to import: google.adk
+   Path involved: C:\Users\Not John Or Justin\Documents\GitHub\instabids-live\.venv\Lib\site-packages\google\adk\__init__.py
+--------------------------------------------------
+Script finished.
