@@ -162,13 +162,25 @@ async def submit_scope_fact(
     current_project_scope_id = project_scope_id or tool_context.state.get('current_project_scope_id')
     generated_new_project_id_message_suffix = ""
 
+    # Prepare the value to be saved, converting to boolean if necessary
+    value_to_save = fact_value
+    if fact_name == "group_bidding_preference":
+        if isinstance(fact_value, str):
+            value_to_save = fact_value.lower() in ['true', 'yes']
+        elif isinstance(fact_value, bool):
+            value_to_save = fact_value # Already a boolean
+        else:
+            # Handle unexpected types for group_bidding_preference, default to False or log error
+            print(f"[Tool: submit_scope_fact] Warning: Unexpected type for group_bidding_preference '{fact_value}'. Defaulting to False.", flush=True)
+            value_to_save = False
+
     try:
         if not current_project_scope_id:
             new_project_scope_uuid = str(uuid.uuid4()) # Generate UUID for the project's own ID column
-            print(f"[Tool: submit_scope_fact] No current_project_scope_id. Creating new project scope (ID: {new_project_scope_uuid}) for homeowner_id {current_homeowner_id} with {fact_name}: {fact_value}", flush=True)
+            print(f"[Tool: submit_scope_fact] No current_project_scope_id. Creating new project scope (ID: {new_project_scope_uuid}) for homeowner_id {current_homeowner_id} with {fact_name}: {value_to_save}", flush=True)
             new_scope_data = {
                 'id': new_project_scope_uuid, # Explicitly set the project's own ID
-                fact_name: fact_value,
+                fact_name: value_to_save, # Use the potentially converted value
                 'homeowner_id': current_homeowner_id
             }
             
@@ -180,8 +192,8 @@ async def submit_scope_fact(
             generated_new_project_id_message_suffix = f" Project ID is {current_project_scope_id}."
             return f"Successfully created new project and saved {fact_name}.{generated_new_project_id_message_suffix}{generated_new_homeowner_id_message_suffix}"
         else:
-            print(f"[Tool: submit_scope_fact] Updating project_scope ID: {current_project_scope_id} (homeowner_id: {current_homeowner_id}) with {fact_name}: {fact_value}", flush=True)
-            update_data = {fact_name: fact_value}
+            print(f"[Tool: submit_scope_fact] Updating project_scope ID: {current_project_scope_id} (homeowner_id: {current_homeowner_id}) with {fact_name}: {value_to_save}", flush=True)
+            update_data = {fact_name: value_to_save} # Use the potentially converted value
             response = supabase_client.table("project_scopes").update(update_data).eq("id", current_project_scope_id).execute()
             print(f"[Tool: submit_scope_fact] Update operation completed for project_scope ID: {current_project_scope_id}. Response status: {getattr(response, 'status_code', 'N/A')}, data: {getattr(response, 'data', 'N/A')}", flush=True)
             return f"Successfully updated {fact_name} for project ID {current_project_scope_id}.{generated_new_homeowner_id_message_suffix}"
